@@ -19,20 +19,20 @@ const CreateRoomPage = () => {
     const defaultVotes = 1
     const { handleSubmit, control} = useForm();
     let history = useHistory();
-    const onSubmit = async data => {
+    const createRoom = async data => {
 
-      const response = await fetch('/api/create-room',{
+        const response = await fetch('/api/create-room',{
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify(data)
-      });
+        });
 
-      const res = await response.json()
-      if(response.status === 201 || response.status === 200){
+        const res = await response.json()
+        if(response.status === 201 || response.status === 200){
           history.push('/room/'+res.code)
-      } else {
+        } else {
             alert(res)
-      }
+        }
     };
 
     return (
@@ -44,7 +44,7 @@ const CreateRoomPage = () => {
             </Grid>
 
             <Grid xs={12} align={"center"}>
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmit(createRoom)}>
 
                     <Grid item xs={12} align={"center"}>
                         <FormControl component={"fieldset"}>
@@ -99,7 +99,7 @@ const CreateRoomPage = () => {
                                 }}
                             />
                             <FormHelperText>
-                                <div>Votes required to skip song</div>
+                                <div align={'center'}>Votes required to skip song</div>
                             </FormHelperText>
 
                         </FormControl>
