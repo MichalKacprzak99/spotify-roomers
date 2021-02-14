@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from "react-router-dom"
+import { Link, useHistory } from "react-router-dom"
 import {
     Button,
     Grid,
@@ -17,23 +17,20 @@ import {useForm, Controller} from "react-hook-form";
 
 const CreateRoomPage = () => {
     const defaultVotes = 1
-    const { handleSubmit, control, reset} = useForm();
-
+    const { handleSubmit, control} = useForm();
+    let history = useHistory();
     const onSubmit = async data => {
 
       const response = await fetch('/api/create-room',{
           method: 'POST',
-          credentials: 'omit',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify(data)
       });
 
       const res = await response.json()
       if(response.status === 201 || response.status === 200){
-          console.log(res)
-          reset()
+          history.push('/room/'+res.code)
       } else {
-
             alert(res)
       }
     };

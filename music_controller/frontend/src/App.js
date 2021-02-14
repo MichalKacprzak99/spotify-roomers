@@ -1,13 +1,12 @@
 import React from "react"
-import {HomePage, RoomJoinPage, CreateRoomPage} from './pages'
+import {HomePage, RoomJoinPage, CreateRoomPage, RoomPage} from './pages'
 import {
     BrowserRouter as Router, 
-    Switch, 
-    Link, 
-    Redirect,
+    Switch,
     Route
 } from 'react-router-dom'
 const App = () => {
+
 
     return (
     <Router>
@@ -15,6 +14,7 @@ const App = () => {
             <Route exact path="/" component={HomePage}/>
             <Route path="/join" component={RoomJoinPage}/>
             <Route path="/create" component={CreateRoomPage}/>
+            <Route path="/room/:roomCode" component={RoomPage}/>
         </Switch>
     </Router>
     )
