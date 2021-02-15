@@ -11,7 +11,22 @@ import PauseIcon from "@material-ui/icons/Pause";
 import SkipNextIcon from "@material-ui/icons/SkipNext";
 
 const MusicPlayer = ({song}) => {
-    console.log(song)
+
+    const pauseSong = () => {
+        fetch('/spotify/pause', {
+            method: "PUT",
+            headers: {'Content-Type': 'application/json'},
+        })
+    }
+
+    const playSong = () => {
+        fetch('/spotify/play', {
+            method: "PUT",
+            headers: {'Content-Type': 'application/json'},
+        })
+    }
+
+
     const {image_url: imageUrl, title, artists, is_playing: isPlaying, time, duration} = song
     const songProgress = (time/duration) * 100
     return (
@@ -28,8 +43,8 @@ const MusicPlayer = ({song}) => {
                         {artists}
                     </Typography>
                     <div>
-                        <IconButton>
-                            {isPlaying ? <PauseIcon/> : <PlayArrowIcon/>}
+                        <IconButton onClick={() => isPlaying ? pauseSong() : playSong()}>
+                            {isPlaying ? <PauseIcon /> : <PlayArrowIcon/>}
                         </IconButton>
                         <IconButton>
                             <SkipNextIcon/>
