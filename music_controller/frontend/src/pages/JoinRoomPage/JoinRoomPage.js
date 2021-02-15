@@ -62,7 +62,7 @@ const JoinRoomPage = () => {
             </Grid>
 
             <Grid item xs={12} align={"center"}>
-                <Button color={"primary"} variant={"contained"} to={"/"} component={Link}>
+                <Button color={"secondary"} variant={"contained"} to={"/"} component={Link}>
                     Back
                 </Button>
             </Grid>
