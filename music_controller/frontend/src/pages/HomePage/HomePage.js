@@ -6,13 +6,13 @@ const HomePage = () => {
 
     const renderHomePage = () => {
         return (
-            <Grid container spacing={3}>
-                <Grid item xs={12} align={"center"}>
+            <Grid container spacing={3} alignItems={"center"} direction={"column"}>
+                <Grid item xs={12}>
                     <Typography variant="h3" compact="h3">
                     House Party
                     </Typography>
                 </Grid>
-                <Grid item xs={12} align={"center"}>
+                <Grid item xs={12}>
                     <ButtonGroup disableElevation variant="contained" color="primary">
                         <Button color="primary" to="/join" component={Link}>
                         Join a Room
@@ -30,7 +30,6 @@ const HomePage = () => {
         <>
             {renderHomePage()}
         </>
-
     );
 }
 

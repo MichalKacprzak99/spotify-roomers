@@ -6,6 +6,7 @@ import {
     Route,
     Redirect
 } from 'react-router-dom'
+
 const App = () => {
 
     const [currentRoomCode, setCurrentRoomCode] = useState(null)
@@ -14,8 +15,11 @@ const App = () => {
         fetch(`/api/user-in-room`)
             .then(response => response.json())
             .then(data => setCurrentRoomCode(data.code))
-        console.log(currentRoomCode ? "ala": "basia")
     }, [])
+
+    const leaveRoom = () => {
+        setCurrentRoomCode(null)
+    }
 
     return (
         <div className={"center"}>
@@ -27,7 +31,9 @@ const App = () => {
                     />
                     <Route path="/join" component={RoomJoinPage}/>
                     <Route path="/create" component={CreateRoomPage}/>
-                    <Route path="/room/:roomCode" component={RoomPage}/>
+                    <Route path="/room/:roomCode" render={(props) => {
+                        return <RoomPage {...props} leaveRoomCallback = {leaveRoom}/>
+                    }}/>
                 </Switch>
             </Router>
         </div>

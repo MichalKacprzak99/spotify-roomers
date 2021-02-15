@@ -26,15 +26,15 @@ const JoinRoomPage = () => {
     }
 
     return (
-        <Grid container spacing={1} align={"center"}>
-            <Grid item xs={12} align={"center"}>
+        <Grid container spacing={1} alignItems={"center"} direction={"column"}>
+            <Grid item xs={12}>
                 <Typography variant={"h4"} component={"h4"}>
                     Join a room
                 </Typography>
             </Grid>
-            <Grid item xs={12} align={"center"}>
+            <Grid item xs={12} >
                 <form onSubmit={handleSubmit(joinRoom)}>
-                    <Grid item xs={12} align={"center"} >
+                    <Grid item xs={12}  >
                         <FormControl>
                             <Controller
                                 name={"code"}
@@ -61,7 +61,7 @@ const JoinRoomPage = () => {
                 </form>
             </Grid>
 
-            <Grid item xs={12} align={"center"}>
+            <Grid item xs={12} >
                 <Button color={"secondary"} variant={"contained"} to={"/"} component={Link}>
                     Back
                 </Button>
