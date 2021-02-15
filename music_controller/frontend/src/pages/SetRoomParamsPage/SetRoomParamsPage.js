@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { Link, useHistory } from "react-router-dom"
 import {
     Button,
@@ -9,42 +9,91 @@ import {
     FormControl,
     Radio,
     FormControlLabel,
-    RadioGroup
+    RadioGroup,
+    Collapse,
 } from '@material-ui/core'
-
+import Alert from '@material-ui/lab/Alert'
 import {useForm, Controller} from "react-hook-form";
 
 
-const CreateRoomPage = () => {
-    const defaultVotes = 1
-    const { handleSubmit, control} = useForm();
-    let history = useHistory();
-    const createRoom = async data => {
+const SetRoomParamsPage = (props) => {
+    const {
+        roomCode = null,
+        update=false,
+        guestCanPause = 'false',
+        votesToSkip = 1,
+        updateCallback,
+    } = props
 
-        const response = await fetch('/api/create-room',{
+
+    const { handleSubmit, control} = useForm();
+    const [errorMsg, setErrorMsg] = useState("")
+    const [successMsg, setSuccessMsg] = useState("")
+
+    let history = useHistory();
+    const createRoom = data => {
+        fetch('/api/create-room',{
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify(data)
-        });
-
-        const res = await response.json()
-        if(response.status === 201 || response.status === 200){
-          history.push('/room/'+res.code)
-        } else {
-            alert(res)
-        }
+        }).then(response => {
+            if(response.ok){
+                return response.json()
+            }
+            alert("Bad response")
+        }).then((data)=> history.push('/room/'+data.code))
     };
 
+    const updateRoom = data => {
+        data['code'] = roomCode
+        fetch('/api/update-room',{
+          method: 'PATCH',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(data)
+        }).then(response => {
+            if(response.ok){
+                setSuccessMsg("Room Updated")
+            } else {
+                setErrorMsg("Failed to update")
+            }
+            updateCallback()
+        })
+
+
+    };
+    const title = update ? "Update room" : "Create Room"
+
+    const renderBackButton = () => {
+        return (
+            <Grid item xs={12} align={"center"}>
+                <Button color={"secondary"} variant={"contained"} to={"/"} component={Link}>
+                    Back
+                </Button>
+            </Grid>
+        )
+    }
+
     return (
+
         <Grid container spacing={1} alignItems={"flex-start"} alignContent={"flex-start"}>
+
+            <Grid item xs={12} align={"center"}>
+                <Collapse in={errorMsg !== "" || successMsg !== ""}>
+                    {successMsg !== "" ? (
+                        <Alert severity={"success"} onClose={()=>{setSuccessMsg("")}}>{successMsg}</Alert>
+                    ) : (
+                        <Alert severity={"error"} onClose={()=>{setErrorMsg("")}}>{errorMsg}</Alert>
+                    )}
+                </Collapse>
+            </Grid>
             <Grid item xs={12} align={"center"}>
                 <Typography component={"h4"} variant={"h4"}>
-                    Create a room
+                    {title}
                 </Typography>
             </Grid>
 
             <Grid xs={12} align={"center"}>
-                <form onSubmit={handleSubmit(createRoom)}>
+                <form onSubmit={handleSubmit(update ? updateRoom : createRoom)}>
 
                     <Grid item xs={12} align={"center"}>
                         <FormControl component={"fieldset"}>
@@ -56,7 +105,7 @@ const CreateRoomPage = () => {
                             <Controller
                                 name={"guest_can_pause"}
                                 as={
-                                    <RadioGroup row defaultValue={'true'}>
+                                    <RadioGroup row defaultValue={guestCanPause.toString()}>
                                         <FormControlLabel
                                             control={<Radio color="primary"/>}
                                             label={"Play/Pause"}
@@ -72,7 +121,7 @@ const CreateRoomPage = () => {
                                         </FormControlLabel>
                                     </RadioGroup>
                                 }
-                                defaultValue={'true'}
+                                defaultValue={guestCanPause.toString()}
                                 control={control}
                             />
                         </FormControl>
@@ -86,13 +135,14 @@ const CreateRoomPage = () => {
                                     <TextField
                                         id={"requiredVotes"}
                                         type={"number"}
+                                        defaultValue={votesToSkip}
                                         inputProps={{
                                             min: 1,
                                             style: { textAlign: "center"}
                                         }}
                                     />
                                 }
-                                defaultValue={defaultVotes}
+                                defaultValue={votesToSkip}
                                 control={control}
                                 rules={{
                                     required: 'Required'
@@ -107,19 +157,14 @@ const CreateRoomPage = () => {
 
                     <Grid item xs={12} align={"center"}>
                         <Button color={"primary"} variant={"contained"} type={"submit"}>
-                            Create Room
+                            {title}
                         </Button>
                     </Grid>
                 </form>
             </Grid>
-
-            <Grid item xs={12} align={"center"}>
-                <Button color={"secondary"} variant={"contained"} to={"/"} component={Link}>
-                    Back
-                </Button>
-            </Grid>
+            {!update ? renderBackButton() : null}
         </Grid>
     );
 }
 
-export default CreateRoomPage
+export default SetRoomParamsPage

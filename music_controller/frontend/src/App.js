@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react"
-import {HomePage, RoomJoinPage, CreateRoomPage, RoomPage} from './pages'
+import {HomePage, RoomJoinPage, SetRoomParamsPage, RoomPage} from './pages'
 import {
     BrowserRouter as Router, 
     Switch,
@@ -30,7 +30,7 @@ const App = () => {
                     }}
                     />
                     <Route path="/join" component={RoomJoinPage}/>
-                    <Route path="/create" component={CreateRoomPage}/>
+                    <Route path="/create" component={SetRoomParamsPage}/>
                     <Route path="/room/:roomCode" render={(props) => {
                         return <RoomPage {...props} leaveRoomCallback = {leaveRoom}/>
                     }}/>
