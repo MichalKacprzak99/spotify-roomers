@@ -10,19 +10,19 @@ const JoinRoomPage = () => {
     const [helpText, setHelpText] = useState("Code needed to enter the room")
     let history = useHistory();
 
-    const joinRoom = async(data) =>{
-        const response = await fetch('/api/join-room',{
+    const joinRoom = (data) =>{
+        fetch('/api/join-room',{
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify(data)
-        });
-
-        if(response.ok){
-            history.push('/room/'+data.code)
-        } else {
-            setError("error")
-            setHelpText("Invalid room code")
-        }
+        }).then(response => {
+            if(response.ok){
+                history.push('/room/'+data.code)
+            } else {
+                setError("error")
+                setHelpText("Invalid room code")
+            }
+        })
     }
 
     return (

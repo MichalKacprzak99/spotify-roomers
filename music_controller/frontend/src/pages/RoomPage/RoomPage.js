@@ -6,8 +6,24 @@ import {SetRoomParamsPage} from '../index'
 const RoomPage = (props) => {
     const [roomInfo, setRoomInfo] = useState(null)
     const [showSettings, setShowSettings] = useState(false)
+    const [spotifyAuthenticated, setSpotifyAuthenticated] = useState(false)
     const {roomCode} = useParams();
     let history = useHistory();
+
+    const authenticateSpotify = () =>{
+    fetch("/spotify/is-authenticated")
+        .then((response) => response.json())
+        .then((data) => {
+          setSpotifyAuthenticated(data.status)
+          if (!data.status) {
+              fetch("/spotify/get-auth-url")
+                  .then((response) => response.json())
+                  .then((data) => {
+                      window.location.replace(data.url);
+                  })
+          }
+        });
+  }
 
     const getRoomDetails = () =>{
         fetch(`/api/get-room?code=${roomCode}`)
@@ -17,11 +33,15 @@ const RoomPage = (props) => {
                     history.push('/')
                 }
                 return response.json()
-            })
-            .then(data => {
+            }).then(data => {
                 setRoomInfo(data)
+                if(data['is_host']){
+                    authenticateSpotify()
+                }
             })
     }
+
+
     useEffect(() => {
         getRoomDetails()
     }, []);
