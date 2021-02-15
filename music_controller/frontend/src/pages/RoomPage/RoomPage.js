@@ -38,7 +38,6 @@ const RoomPage = (props) => {
 
             })
             .then((data) => {
-                console.log(data)
                 setSong(data)
             })
     }

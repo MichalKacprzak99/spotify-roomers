@@ -26,8 +26,23 @@ const MusicPlayer = ({song}) => {
         })
     }
 
+    const skipSong = () => {
+        fetch('/spotify/skip', {
+            method: "POST",
+            headers: {'Content-Type': 'application/json'},
+        })
+    }
 
-    const {image_url: imageUrl, title, artists, is_playing: isPlaying, time, duration} = song
+
+    const {
+        image_url: imageUrl,
+        title,
+        artists,
+        is_playing: isPlaying,
+        time, duration,
+        votes,
+        votes_required: votesRequired,
+    } = song
     const songProgress = (time/duration) * 100
     return (
         <Card>
@@ -46,8 +61,8 @@ const MusicPlayer = ({song}) => {
                         <IconButton onClick={() => isPlaying ? pauseSong() : playSong()}>
                             {isPlaying ? <PauseIcon /> : <PlayArrowIcon/>}
                         </IconButton>
-                        <IconButton>
-                            <SkipNextIcon/>
+                        <IconButton onClick={() => skipSong()}>
+                            <SkipNextIcon/>{votes} /{" "} {votesRequired}
                         </IconButton>
                     </div>
                 </Grid>
