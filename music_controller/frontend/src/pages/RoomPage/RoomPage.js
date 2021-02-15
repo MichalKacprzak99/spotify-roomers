@@ -2,28 +2,46 @@ import React, {useState, useEffect} from 'react'
 import {useParams, useHistory} from 'react-router-dom';
 import {Button, Grid, Typography} from "@material-ui/core";
 import {SetRoomParamsPage} from '../index'
+import {MusicPlayer} from './components'
 
 const RoomPage = (props) => {
     const [roomInfo, setRoomInfo] = useState(null)
     const [showSettings, setShowSettings] = useState(false)
     const [spotifyAuthenticated, setSpotifyAuthenticated] = useState(false)
+    const [song, setSong] = useState({})
     const {roomCode} = useParams();
     let history = useHistory();
 
     const authenticateSpotify = () =>{
-    fetch("/spotify/is-authenticated")
-        .then((response) => response.json())
-        .then((data) => {
-          setSpotifyAuthenticated(data.status)
-          if (!data.status) {
-              fetch("/spotify/get-auth-url")
-                  .then((response) => response.json())
-                  .then((data) => {
-                      window.location.replace(data.url);
-                  })
-          }
-        });
-  }
+        fetch("/spotify/is-authenticated")
+            .then((response) => response.json())
+            .then((data) => {
+              setSpotifyAuthenticated(data.status)
+              if (!data.status) {
+                  fetch("/spotify/get-auth-url")
+                      .then((response) => response.json())
+                      .then((data) => {
+                          window.location.replace(data.url);
+                      })
+              }
+            });
+    }
+
+    const getCurrentSong = () => {
+        fetch('/spotify/current-song')
+            .then((response) => {
+                if(!response.ok){
+                    return {};
+                } else {
+                    return response.json()
+                }
+
+            })
+            .then((data) => {
+                console.log(data)
+                setSong(data)
+            })
+    }
 
     const getRoomDetails = () =>{
         fetch(`/api/get-room?code=${roomCode}`)
@@ -45,6 +63,13 @@ const RoomPage = (props) => {
     useEffect(() => {
         getRoomDetails()
     }, []);
+
+    useEffect(() =>{
+        const interval = setInterval(() =>{
+            getCurrentSong()
+        }, 1000)
+        return () => clearInterval(interval)
+    }, [])
 
     const leaveRoom = () => {
         fetch('/api/leave-room', {
@@ -98,21 +123,7 @@ const RoomPage = (props) => {
                         Code: {roomCode}
                     </Typography>
                 </Grid>
-                <Grid item xs={12} >
-                    <Typography variant={"h6"} component={"h4"}>
-                        Guest can pause: {guestCanPause.toString()}
-                    </Typography>
-                </Grid>
-                <Grid item xs={12} >
-                    <Typography variant={"h6"} component={"h4"}>
-                        Votes to skip a song: {votesToSkip}
-                    </Typography>
-                </Grid>
-                <Grid item xs={12} >
-                    <Typography variant={"h6"} component={"h4"}>
-                        Is user a host?: {isHost.toString()}
-                    </Typography>
-                </Grid>
+                <MusicPlayer song = {song}/>
                 {isHost ? renderSettingsButton() : null}
                 <Grid item xs={12}>
                     <Button color={"secondary"} variant={"contained"} onClick={leaveRoom} >
