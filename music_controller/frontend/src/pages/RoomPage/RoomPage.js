@@ -1,13 +1,15 @@
 import React, {useState, useEffect} from 'react'
-import {Link, useParams, useHistory} from 'react-router-dom';
+import {useParams, useHistory} from 'react-router-dom';
 import {Button, Grid, Typography} from "@material-ui/core";
+import {SetRoomParamsPage} from '../index'
+
 const RoomPage = (props) => {
     const [roomInfo, setRoomInfo] = useState(null)
-
+    const [showSettings, setShowSettings] = useState(false)
     const {roomCode} = useParams();
     let history = useHistory();
 
-    useEffect(() => {
+    const getRoomDetails = () =>{
         fetch(`/api/get-room?code=${roomCode}`)
             .then(response => {
                 if(!response.ok){
@@ -16,7 +18,12 @@ const RoomPage = (props) => {
                 }
                 return response.json()
             })
-            .then(data => setRoomInfo(data))
+            .then(data => {
+                setRoomInfo(data)
+            })
+    }
+    useEffect(() => {
+        getRoomDetails()
     }, []);
 
     const leaveRoom = () => {
@@ -30,8 +37,40 @@ const RoomPage = (props) => {
 
     }
 
+    const renderSettings = () => {
+        return (
+            <Grid container spacing={1} alignItems={"center"} direction={"column"}>
+                <Grid item xs={12}>
+                    <SetRoomParamsPage
+                        roomCode = {roomCode}
+                        update={true}
+                        guestCanPause = {roomInfo['guest_can_pause']}
+                        votesToSkip = {roomInfo['votes_to_skip']}
+                        updateCallback={getRoomDetails}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <Button color={"secondary"} variant={"contained"} onClick={() => setShowSettings(false)}>
+                    Close settings
+                    </Button>
+                </Grid>
+            </Grid>
+        )
+    }
+
+    const renderSettingsButton = () => {
+        return (
+            <Grid item xs={12}>
+                <Button color={"primary"} variant={"contained"} onClick={() => setShowSettings(true)}>
+                    Show settings
+                </Button>
+            </Grid>
+        );
+    }
+
+
     const renderRoomPage = () => {
-        const {guest_can_pose: guestCanPose, votes_to_skip: votesToSkip, is_host: isHost } = roomInfo
+        const {guest_can_pause: guestCanPause, votes_to_skip: votesToSkip, is_host: isHost } = roomInfo
         return (
             <Grid container spacing={1} alignItems={"center"} direction={"column"}>
                 <Grid item xs={12} >
@@ -41,19 +80,20 @@ const RoomPage = (props) => {
                 </Grid>
                 <Grid item xs={12} >
                     <Typography variant={"h6"} component={"h4"}>
-                        Code: {guestCanPose}
+                        Guest can pause: {guestCanPause.toString()}
                     </Typography>
                 </Grid>
                 <Grid item xs={12} >
                     <Typography variant={"h6"} component={"h4"}>
-                        Code: {votesToSkip}
+                        Votes to skip a song: {votesToSkip}
                     </Typography>
                 </Grid>
                 <Grid item xs={12} >
                     <Typography variant={"h6"} component={"h4"}>
-                        Code: {isHost.toString()}
+                        Is user a host?: {isHost.toString()}
                     </Typography>
                 </Grid>
+                {isHost ? renderSettingsButton() : null}
                 <Grid item xs={12}>
                     <Button color={"secondary"} variant={"contained"} onClick={leaveRoom} >
                         Leave Room
@@ -62,12 +102,13 @@ const RoomPage = (props) => {
             </Grid>
         )
     }
+        if(showSettings){
+            return (<>{renderSettings()}</>);
+        }
 
-    return (
-        <>
-            {roomInfo ? renderRoomPage(): null}
-        </>
-    );
+        return (<>{roomInfo ? renderRoomPage() : null}</>);
+
+
 }
 
 export default RoomPage
