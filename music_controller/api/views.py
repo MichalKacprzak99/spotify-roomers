@@ -11,7 +11,7 @@ from .models import Room
 
 
 class RoomView(generics.ListAPIView):
-    queryset = Room.objects.all()
+    rooms = Room.objects.all()
     serializer_class = RoomSerializer
 
 
@@ -27,9 +27,9 @@ class CreateRoom(APIView):
             guest_can_pause = serializer.data.get('guest_can_pause')
             votes_to_skip = serializer.data.get('votes_to_skip')
             host = self.request.session.session_key
-            queryset = Room.objects.filter(host=host)
-            if queryset.exists():
-                room = queryset[0]
+            rooms = Room.objects.filter(host=host)
+            if rooms.exists():
+                room = rooms[0]
                 room.guest_can_pause = guest_can_pause
                 room.votes_to_skip = votes_to_skip
                 room.save(update_fields=['guest_can_pause', 'votes_to_skip'])
@@ -52,10 +52,11 @@ class GetRoom(APIView):
     def get(self, request, format=None):
         code = request.GET.get(self.lookup_url_kwarg)
         if code is not None:
-            room_result = Room.objects.filter(code=code)
-            if room_result.exists() > 0:
-                data = RoomSerializer(room_result[0]).data
-                data['is_host'] = self.request.session.session_key == room_result[0].host
+            rooms = Room.objects.filter(code=code)
+            if rooms.exists() > 0:
+                room = rooms[0]
+                data = RoomSerializer(room).data
+                data['is_host'] = self.request.session.session_key == room.host
                 return Response(data, status=status.HTTP_200_OK)
             return Response({'Room Not Found': 'Invalid Room Code'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -72,8 +73,8 @@ class JoinRoom(APIView):
 
         code = request.data.get(self.lookup_url_kwarg)
         if code is not None:
-            room_result = Room.objects.filter(code=code)
-            if room_result.exists():
+            rooms = Room.objects.filter(code=code)
+            if rooms.exists():
                 self.request.session['room_code'] = code
                 return Response({'message': 'Room Joined'}, status=status.HTTP_200_OK)
 
@@ -103,9 +104,9 @@ class LeaveRoom(APIView):
         if 'room_code' in self.request.session:
             self.request.session.pop('room_code')
             host_id = self.request.session.session_key
-            room_results = Room.objects.filter(host=host_id)
-            if room_results.exists():
-                room = room_results[0]
+            rooms = Room.objects.filter(host=host_id)
+            if rooms.exists():
+                room = rooms[0]
                 room.delete()
 
         return Response({'Message': 'Succes'}, status=status.HTTP_200_OK)
@@ -124,11 +125,11 @@ class UpdateRoom(APIView):
             votes_to_skip = serializer.data.get('votes_to_skip')
             code = serializer.data.get('code')
 
-            queryset = Room.objects.filter(code=code)
-            if not queryset.exists():
+            rooms = Room.objects.filter(code=code)
+            if not rooms.exists():
                 return Response({'msg': 'Room not found'}, status=status.HTTP_404_NOT_FOUND)
 
-            room = queryset[0]
+            room = rooms[0]
             user_id = self.request.session.session_key
             if room.host != user_id:
                 return Response({'msg': 'You are not host'}, status=status.HTTP_403_FORBIDDEN)

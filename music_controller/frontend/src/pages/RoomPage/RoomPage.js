@@ -7,7 +7,6 @@ import {MusicPlayer} from './components'
 const RoomPage = (props) => {
     const [roomInfo, setRoomInfo] = useState(null)
     const [showSettings, setShowSettings] = useState(false)
-    const [spotifyAuthenticated, setSpotifyAuthenticated] = useState(false)
     const [song, setSong] = useState({})
     const {roomCode} = useParams();
     let history = useHistory();
@@ -16,7 +15,6 @@ const RoomPage = (props) => {
         fetch("/spotify/is-authenticated")
             .then((response) => response.json())
             .then((data) => {
-              setSpotifyAuthenticated(data.status)
               if (!data.status) {
                   fetch("/spotify/get-auth-url")
                       .then((response) => response.json())
@@ -35,7 +33,6 @@ const RoomPage = (props) => {
                 } else {
                     return response.json()
                 }
-
             })
             .then((data) => {
                 setSong(data)
@@ -114,7 +111,7 @@ const RoomPage = (props) => {
 
 
     const renderRoomPage = () => {
-        const {guest_can_pause: guestCanPause, votes_to_skip: votesToSkip, is_host: isHost } = roomInfo
+        const {is_host: isHost } = roomInfo
         return (
             <Grid container spacing={1} alignItems={"center"} direction={"column"}>
                 <Grid item xs={12} >
@@ -132,11 +129,12 @@ const RoomPage = (props) => {
             </Grid>
         )
     }
-        if(showSettings){
-            return (<>{renderSettings()}</>);
-        }
 
-        return (<>{roomInfo ? renderRoomPage() : null}</>);
+    if(showSettings){
+        return (<>{renderSettings()}</>);
+    }
+
+    return (<>{roomInfo ? renderRoomPage() : null}</>);
 
 
 }

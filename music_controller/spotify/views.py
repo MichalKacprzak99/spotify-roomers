@@ -12,7 +12,7 @@ from spotify.models import Vote
 
 
 class AuthURL(APIView):
-    def get(self, request, format=None):
+    def get(self, request, format=None) -> Response:
         scopes = 'user-read-playback-state user-modify-playback-state user-read-currently-playing'
 
         url = Request('GET', 'https://accounts.spotify.com/authorize', params={
@@ -27,7 +27,6 @@ class AuthURL(APIView):
 
 def spotify_callback(request, format=None):
     code = request.GET.get('code')
-    error = request.GET.get('error')
 
     response = post('https://accounts.spotify.com/api/token', data={
         'grant_type': 'authorization_code',
@@ -41,7 +40,6 @@ def spotify_callback(request, format=None):
     token_type = response.get('token_type')
     refresh_token = response.get('refresh_token')
     expires_in = response.get('expires_in')
-    error = response.get('error')
 
     if not request.session.exists(request.session.session_key):
         request.session.create()
@@ -53,18 +51,18 @@ def spotify_callback(request, format=None):
 
 
 class IsAuthenticated(APIView):
-    def get(self, request, format=None):
+    def get(self, request, format=None) -> Response:
         is_authenticated = utils.is_spotify_authenticated(
             self.request.session.session_key)
         return Response({'status': is_authenticated}, status=status.HTTP_200_OK)
 
 
 class CurrentSong(APIView):
-    def get(self, request, format=None):
+    def get(self, request, format=None) -> Response:
         room_code = self.request.session.get('room_code')
-        queryset = Room.objects.filter(code=room_code)
-        if queryset.exists():
-            room = queryset[0]
+        rooms = Room.objects.filter(code=room_code)
+        if rooms.exists():
+            room = rooms[0]
         else:
             return Response({}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -112,11 +110,11 @@ class CurrentSong(APIView):
 
 
 class PauseSong(APIView):
-    def put(self, request, format=None):
+    def put(self, request, format=None) -> Response:
         room_code = self.request.session.get('room_code')
-        queryset = Room.objects.filter(code=room_code)
-        if queryset.exists():
-            room = queryset[0]
+        rooms = Room.objects.filter(code=room_code)
+        if rooms.exists():
+            room = rooms[0]
         else:
             return Response({}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -128,11 +126,11 @@ class PauseSong(APIView):
 
 
 class PlaySong(APIView):
-    def put(self, request, format=None):
+    def put(self, request, format=None) -> Response:
         room_code = self.request.session.get('room_code')
-        queryset = Room.objects.filter(code=room_code)
-        if queryset.exists():
-            room = queryset[0]
+        rooms = Room.objects.filter(code=room_code)
+        if rooms.exists():
+            room = rooms[0]
         else:
             return Response({}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -144,12 +142,12 @@ class PlaySong(APIView):
 
 
 class SkipSong(APIView):
-    def post(self, request, format=None):
+    def post(self, request, format=None) -> Response:
         room_code = self.request.session.get('room_code')
-        queryset = Room.objects.filter(code=room_code)
+        rooms = Room.objects.filter(code=room_code)
 
-        if queryset.exists():
-            room = queryset[0]
+        if rooms.exists():
+            room = rooms[0]
         else:
             return Response({}, status=status.HTTP_400_BAD_REQUEST)
         votes = Vote.objects.filter(room=room, song_id=room.current_song)

@@ -73,18 +73,23 @@ const SetRoomParamsPage = (props) => {
         )
     }
 
+    const renderUpdateMessage = () => {
+        return (
+            <Collapse in={errorMsg !== "" || successMsg !== ""}>
+                {successMsg !== "" ? (
+                    <Alert severity={"success"} onClose={()=>{setSuccessMsg("")}}>{successMsg}</Alert>
+                    ) : (
+                        <Alert severity={"error"} onClose={()=>{setErrorMsg("")}}>{errorMsg}</Alert>
+                )}
+            </Collapse>
+        )
+    }
+
     return (
 
         <Grid container spacing={1} alignItems={"flex-start"} alignContent={"flex-start"}>
-
             <Grid item xs={12} align={"center"}>
-                <Collapse in={errorMsg !== "" || successMsg !== ""}>
-                    {successMsg !== "" ? (
-                        <Alert severity={"success"} onClose={()=>{setSuccessMsg("")}}>{successMsg}</Alert>
-                    ) : (
-                        <Alert severity={"error"} onClose={()=>{setErrorMsg("")}}>{errorMsg}</Alert>
-                    )}
-                </Collapse>
+                {renderUpdateMessage()}
             </Grid>
             <Grid item xs={12} align={"center"}>
                 <Typography component={"h4"} variant={"h4"}>
