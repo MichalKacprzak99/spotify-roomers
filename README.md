@@ -49,7 +49,6 @@ Application will be hosted online soon.
 ## TODO
 * add default view when no song is played
 * add notification when user can't pause/start/skip song
-* add notification when room is full and user can't join
 * add tests
 * host app on e.g. heroku
 * improve website view
