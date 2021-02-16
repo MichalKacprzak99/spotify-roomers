@@ -119,8 +119,8 @@ class PauseSong(APIView):
             return Response({}, status=status.HTTP_400_BAD_REQUEST)
 
         if self.request.session.session_key == room.host or room.guest_can_pause:
-            utils.pause_song(room.host)
-            return Response({}, status=status.HTTP_204_NO_CONTENT)
+            response = utils.pause_song(room.host)
+            return Response({}, status=response.get('code'))
 
         return Response({}, status=status.HTTP_403_FORBIDDEN)
 
@@ -135,8 +135,8 @@ class PlaySong(APIView):
             return Response({}, status=status.HTTP_400_BAD_REQUEST)
 
         if self.request.session.session_key == room.host or room.guest_can_pause:
-            utils.play_song(room.host)
-            return Response({}, status=status.HTTP_204_NO_CONTENT)
+            response = utils.play_song(room.host)
+            return Response({}, status=response.get('code'))
 
         return Response({}, status=status.HTTP_403_FORBIDDEN)
 
@@ -155,7 +155,8 @@ class SkipSong(APIView):
 
         if self.request.session.session_key == room.host or room.guest_can_pause or len(votes) + 1 > votes_needed:
             votes.delete()
-            utils.skip_song(room.host)
+            response = utils.skip_song(room.host)
+            return Response({}, status=response.get('code'))
         else:
             vote = Vote(user=self.request.session.session_key, room=room, song_id=room.current_song)
             vote.save()
