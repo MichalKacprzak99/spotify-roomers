@@ -7,11 +7,8 @@ from .serializers import RoomSerializer, CreateRoomSerializer, UpdateRoomSeriali
 from .models import Room
 
 
-# Create your views here.
-
-
 class RoomView(generics.ListAPIView):
-    rooms = Room.objects.all()
+    queryset = Room.objects.all()
     serializer_class = RoomSerializer
 
 

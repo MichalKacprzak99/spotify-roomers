@@ -28,7 +28,7 @@ const RoomPage = (props) => {
     const getCurrentSong = () => {
         fetch('/spotify/current-song')
             .then((response) => {
-                if(!response.ok){
+                if(response.status !== 200){
                     return {};
                 } else {
                     return response.json()
@@ -119,7 +119,7 @@ const RoomPage = (props) => {
                         Code: {roomCode}
                     </Typography>
                 </Grid>
-                <MusicPlayer song = {song}/>
+                <MusicPlayer song = {song} votesRequired = {roomInfo['votes_to_skip']}/>
                 {isHost ? renderSettingsButton() : null}
                 <Grid item xs={12}>
                     <Button color={"secondary"} variant={"contained"} onClick={leaveRoom} >
