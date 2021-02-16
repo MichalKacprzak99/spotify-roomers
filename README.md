@@ -1,4 +1,4 @@
-# Roomer
+# Spotify Roomers
 
 ## Table of content
 * [Project Description](#project-description)
@@ -20,7 +20,7 @@ This is a project based on a series of tutorials available on
 Roomer is a simple Full Stack Web App. It's enable user to create room with random generated code.
 Host can decide how many guest can join to the room and what permissions the guests will have (
 inside room host can modify these settings). After creating the room, the host needs to log in to Spotify
-and give the Roomer the appropriate permissions. The user can join the room if he knows the code. 
+and give an app the appropriate permissions. The user can join the room if he knows the code. 
 In the room, the user will see a simple music player that will show the current song on the host's spotify.
 Host and users(if they have permission if no they vote) can pause/play/skip song.
 ### Me vs Tutorial
