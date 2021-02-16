@@ -118,3 +118,5 @@ node_modules/
 **/migrations/**
 !**/migrations
 !**/migrations/__init__.py
+
+.idea
