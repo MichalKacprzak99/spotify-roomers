@@ -12,7 +12,7 @@
 * [Demo](#demo)
 * [Features](#features)
 * [New things learned](#new-things-learned)
-* [TODO](#todo)
+* [Further development](#further-development)
 ## Project Description
 ### Motivation
 The main goal of creating this application was to learn the basics of Django 
@@ -43,12 +43,15 @@ Application will be hosted online soon.
 * skip or vote to skip a song, depends on room settings( Spotify Premium required)
 ## New things learned
 * Django - basics of new framework
-* material-ui
+* How to connect Django with React
+* pros and cons of material-ui
 * how to use useEffect with interval
 * how to integrate an app with SpotifyAPI
-## TODO
-* add default view when no song is played
-* add notification when user can't pause/start/skip song
-* add tests
-* host app on e.g. heroku
-* improve website view
+## Further development
+After completing the tutorial, I plan to develop this project further. 
+I want to focus primarily on:
+- [x] add default view when no song is played
+- [x] add notification when user can't pause/start/skip song :
+- [ ] add tests 
+- [ ] host app on e.g. heroku
+- [ ] improve website view
