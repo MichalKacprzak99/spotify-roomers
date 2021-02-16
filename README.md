@@ -1,5 +1,9 @@
 # Spotify Roomers
-
+![GitHub](https://img.shields.io/github/license/MichalKacprzak99/spotify-roomers)
+![GitHub last commit](https://img.shields.io/github/last-commit/MichalKacprzak99/spotify-roomers)
+![GitHub top language](https://img.shields.io/github/languages/top/MichalKacprzak99/spotify-roomers)
+![GitHub language count](https://img.shields.io/github/languages/count/MichalKacprzak99/spotify-roomers)
+![GitHub followers](https://img.shields.io/github/followers/MichalKacprzak99?style=social)
 ## Table of content
 * [Project Description](#project-description)
   - [Motivation](#motivation)
