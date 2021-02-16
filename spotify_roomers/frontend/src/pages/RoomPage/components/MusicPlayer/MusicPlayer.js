@@ -16,10 +16,10 @@ import defaultAlbumCover from './images/default-album-art.png'
 const MusicPlayer = ({song, votesRequired}) => {
     const [playerMessage, setPlayerMessage] = useState("")
     const {
-        image_url: imageUrl = defaultAlbumCover,
+        imageUrl = defaultAlbumCover,
         title = "No song",
         artists,
-        is_playing: isPlaying,
+        isPlaying,
         time, duration,
         votes=0,
     } = song

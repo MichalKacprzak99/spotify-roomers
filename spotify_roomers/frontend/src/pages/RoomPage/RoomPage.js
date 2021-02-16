@@ -49,7 +49,7 @@ const RoomPage = (props) => {
                 return response.json()
             }).then(data => {
                 setRoomInfo(data)
-                if(data['is_host']){
+                if(data){
                     authenticateSpotify()
                 }
             })
@@ -111,7 +111,7 @@ const RoomPage = (props) => {
 
 
     const renderRoomPage = () => {
-        const {is_host: isHost } = roomInfo
+        const {isHost} = roomInfo
         return (
             <Grid container spacing={1} alignItems={"center"} direction={"column"}>
                 <Grid item xs={12} >
@@ -119,7 +119,7 @@ const RoomPage = (props) => {
                         Code: {roomCode}
                     </Typography>
                 </Grid>
-                <MusicPlayer song = {song} votesRequired = {roomInfo['votes_to_skip']}/>
+                <MusicPlayer song = {song} votesRequired = {roomInfo['votesToSkip']}/>
                 {isHost ? renderSettingsButton() : null}
                 <Grid item xs={12}>
                     <Button color={"secondary"} variant={"contained"} onClick={leaveRoom} >
