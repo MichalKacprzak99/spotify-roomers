@@ -55,7 +55,7 @@ class GetRoom(APIView):
                 data = RoomSerializer(room).data
                 data['is_host'] = self.request.session.session_key == room.host
                 return Response(data, status=status.HTTP_200_OK)
-            return Response({'Room Not Found': 'Invalid Room Code'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'Room Not Found': 'Invalid Room Code'}, status=status.HTTP_401_UNAUTHORIZED)
 
         return Response({'Bad Request': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -75,7 +75,7 @@ class JoinRoom(APIView):
                 self.request.session['room_code'] = code
                 return Response({'message': 'Room Joined'}, status=status.HTTP_200_OK)
 
-            return Response({'Bad Request': 'Invalid room code'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'Bad Request': 'Invalid room code'}, status=status.HTTP_401_UNAUTHORIZED)
 
         return Response({'Bad Request': 'Invalid post data, did not find a code key'},
                         status=status.HTTP_400_BAD_REQUEST)
