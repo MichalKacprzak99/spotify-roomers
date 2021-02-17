@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 
-class AuthUrlTest(TestCase):
+class AuthUrlViewTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.url = '/spotify/get-auth-url'
@@ -9,4 +9,5 @@ class AuthUrlTest(TestCase):
     def test_create_authentication_url(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
+
 
