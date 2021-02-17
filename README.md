@@ -52,6 +52,6 @@ After completing the tutorial, I plan to develop this project further.
 I want to focus primarily on:
 - [x] add default view when no song is played
 - [x] add notification when user can't pause/start/skip song :
-- [ ] add tests 
+- [x] add basic tests 
 - [ ] host app on e.g. heroku
 - [ ] improve website view
