@@ -33,7 +33,8 @@ I've made some changes to the tutorials. They are as follows:
 * usage react-hook-form
 * more complex usage of react-rooter-dom
 * usage of environment variables
-##Demo
+
+## Demo
 Application will be hosted online soon.
 ## Features
 * create/update/join room
